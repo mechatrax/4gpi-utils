@@ -1,0 +1,10 @@
+./4gpictl /usr/sbin/
+./gpio-export.sh /usr/lib/4gpi-utils/
+./gpio-unexport.sh /usr/lib/4gpi-utils/
+./device-start.sh /usr/lib/4gpi-utils/
+./device-stop.sh /usr/lib/4gpi-utils/
+./modem-config.sh /usr/lib/4gpi-utils/
+./4gpi-modem-config.service /lib/systemd/system/
+./4gpi-setup.service /lib/systemd/system/
+./70-4gpi-port.rules /lib/udev/rules.d/
+./4gpi /etc/default/
