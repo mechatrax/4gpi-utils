@@ -1,0 +1,49 @@
+_4gpictl()
+{
+	local cmds=(
+		'poweron'
+		'poweroff'
+		'reset'
+		'status'
+	)
+	local opts=(
+		'--timeout'
+		'--config'
+	)
+	local exts=(
+		'version'
+		'help'
+	)
+	local cur prev words cword
+	_init_completion || return
+
+	if [ $cword -eq 1 ]
+	then
+		case $cur in
+		-*)
+			COMPREPLY=( $(compgen -W '${opts[@]}' -- $cur) )
+			;;
+		*)
+			COMPREPLY=( $(compgen -W '${cmds[@]} ${exts[@]}' -- $cur) )
+			;;
+		esac
+		return
+	fi
+	
+	case $prev in
+	-c|--config)
+		;;
+	-t|--timeout)
+		;;
+	poweron|poweroff|reset|status)
+		;;
+	help|version)
+		;;
+	*)
+		COMPREPLY=( $(compgen -W '${cmds[@]}' -- $cur) )
+		;;
+	esac
+} &&
+
+complete -F _4gpictl 4gpictl
+

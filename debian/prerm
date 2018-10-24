@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+# In case this system is running systemd, we make systemd reload the unit files
+# to pick up changes.
+if [ -d /run/systemd/system ]; then
+	systemctl --system daemon-reload >/dev/null || true
+fi
+
+if deb-systemd-helper --quiet debian-installed ModemManager.service \
+    && deb-systemd-helper --quiet is-enabled ModemManager.service; then
+	deb-systemd-invoke stop ModemManager.service >/dev/null || true
+fi
+
+if deb-systemd-helper --quiet is-enabled 4gpi-setup.service; then
+	deb-systemd-invoke stop 4gpi-setup.service >/dev/null || true
+fi
+
+#DEBHELPER#
