@@ -1,3 +1,9 @@
+4gpi-utils (1.0.1) unstable; urgency=medium
+
+  * Modify power off process
+
+ -- Masahiro Honda <honda@mechatrax.com>  Mon, 05 Nov 2018 16:01:18 +0900
+
 4gpi-utils (1.0.0) unstable; urgency=low
 
   * Initial release
