@@ -1,6 +1,7 @@
 #!/bin/bash
 
 TIMEOUT=30
+
 SCRIPT="ABORT BUSY ABORT ERROR '' AT OK-AT-OK AT+CSCLK=0 OK ''"
 
 if [ "$AUTO_OFF" != "0" ]
