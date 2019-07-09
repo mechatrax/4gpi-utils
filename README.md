@@ -102,9 +102,6 @@
 ### /usr/lib/4gpi-utils/modem-config.sh
 4GPi のモデムの設定を行う実行ファイルです。
 
-### /usr/share/bash-completion/completions/4gpictl
-4gpictl のコマンド補完を行うための設定ファイルです。
-
 ### /lib/udev/rules.d/70-4gpi-port.rules
 4GPi のデバイスを定義した設定ファイルです。
 
@@ -114,8 +111,11 @@
 ### /lib/systemd/system/4gpi-setup.service
 4GPi の起動終了処理を行うサービスの設定ファイルです。
 
+### /usr/share/bash-completion/completions/4gpictl
+4gpictl のコマンド補完を行うための設定ファイルです。
+
 ### /usr/share/doc/4gpi-utils/changelog.gz
 パッケージの変更履歴を記録したファイルです。
 
 ### /usr/share/doc/4gpi-utils/copyright
-ソースコードの著作権とライセンスを記載したファイルです。
+著作権とライセンスを記載したファイルです。

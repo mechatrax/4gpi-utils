@@ -9,6 +9,22 @@ SCRIPT_RI="'' AT OK-AT-OK AT+CFGRI=1 OK AT+CSCLK=1 OK ''"
 SCRIPT_SM="'' AT OK-AT-OK AT+CNMI=1,2,0,0,0 OK AT+CPMS=\"SM\",\"SM\",\"SM\" OK ''"
 SCRIPT_ME="'' AT OK-AT-OK AT+CNMI=2,1,2,2,0 OK AT+CPMS=\"ME\",\"ME\",\"ME\" OK ''"
 
+wait_poweroff ()
+{
+  local i
+
+  for i in `seq $1`
+  do
+    if [ "$(4gpictl status)" = "off" ]
+    then
+      return 0
+    fi
+    sleep 1
+  done
+
+  return 1
+}
+
 if [ "$AUTO_OFF" != "0" ]
 then
   if [ "$(4gpictl status)" = "off" ]
@@ -17,7 +33,7 @@ then
   fi
   eval chat -t $TIMEOUT $ABORT $SCRIPT_FNCMIN < $CONSOLE_PORT > $CONSOLE_PORT
   eval chat -t $TIMEOUT $ABORT $SCRIPT_PWROFF < $CONSOLE_PORT > $CONSOLE_PORT
-  timeout $TIMEOUT bash -c 'while [ "$(4gpictl status)" != "off" ]; do sleep 1; done' || 4gpictl poweroff
+  wait_poweroff $TIMEOUT || 4gpictl poweroff
 else
   if [ "$WAKE_ON_RING" != "0" ]
   then
