@@ -1,3 +1,14 @@
+4gpi-utils (1.1.0) buster; urgency=medium
+
+  * 4gpictl: Add --nowait option
+  * device-start.sh: Modify power on process
+  * device-stop.sh: Modify power off process
+  * bash_completion.d/4gpictl: Fix path completion
+  * Update debhelper compatibility level to 12
+  * Bump Standards-Version to 4.3.0
+
+ -- Masahiro Honda <honda@mechatrax.com>  Tue, 09 Jul 2019 18:42:33 +0900
+
 4gpi-utils (1.0.1) unstable; urgency=medium
 
   * Modify power off process

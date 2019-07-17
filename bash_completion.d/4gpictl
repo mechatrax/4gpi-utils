@@ -32,6 +32,7 @@ _4gpictl()
 	
 	case $prev in
 	-c|--config)
+		_filedir
 		;;
 	-t|--timeout)
 		;;

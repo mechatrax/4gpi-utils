@@ -27,3 +27,5 @@ if deb-systemd-helper --quiet debian-installed ModemManager.service \
 fi
 
 #DEBHELPER#
+
+exit 0

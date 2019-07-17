@@ -18,3 +18,5 @@ if deb-systemd-helper --quiet is-enabled 4gpi-setup.service; then
 fi
 
 #DEBHELPER#
+
+exit 0
