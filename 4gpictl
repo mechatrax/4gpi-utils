@@ -2,7 +2,7 @@
 #
 # control 4GPi module
 #
-TIMEOUT=30
+TIMEOUT=40
 CONFIG=/etc/default/4gpi
 
 VERSION="1.1"
