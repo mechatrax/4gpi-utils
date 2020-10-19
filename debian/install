@@ -1,6 +1,4 @@
 ./4gpictl /usr/sbin/
-./gpio-export.sh /usr/lib/4gpi-utils/
-./gpio-unexport.sh /usr/lib/4gpi-utils/
 ./device-start.sh /usr/lib/4gpi-utils/
 ./device-stop.sh /usr/lib/4gpi-utils/
 ./modem-config.sh /usr/lib/4gpi-utils/

@@ -3,11 +3,10 @@ Description=4GPi Setup
 
 [Service]
 Type=oneshot
+Environment="GPIOCHIP=gpiochip0"
 EnvironmentFile=/etc/default/4gpi
-ExecStartPre=/usr/lib/4gpi-utils/gpio-export.sh
 ExecStart=/usr/lib/4gpi-utils/device-start.sh
 ExecStop=/usr/lib/4gpi-utils/device-stop.sh
-ExecStopPost=/usr/lib/4gpi-utils/gpio-unexport.sh
 RemainAfterExit=yes
 
 [Install]

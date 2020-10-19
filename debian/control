@@ -10,7 +10,7 @@ Homepage: https://www.mechatrax.com/
 
 Package: 4gpi-utils
 Architecture: all
-Depends: ${misc:Depends}, ppp
+Depends: ${misc:Depends}, ppp, gpiod
 Suggests: 4gpi-net-mods
 Description: Utilities for 4GPi family
  This package contains command line utilities to control 4GPi family.
