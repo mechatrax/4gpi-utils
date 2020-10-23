@@ -2,10 +2,11 @@
 #
 # control 4GPi module
 #
+VERSION="2.0"
+
+GPIOCHIP=gpiochip0
 TIMEOUT=40
 CONFIG=/etc/default/4gpi
-
-VERSION="1.1"
 
 USAGE="Usage: 4gpictl [ OPTION ] COMMAND
 
@@ -28,15 +29,7 @@ Options:
 #
 stat_gpio ()
 {
-    local port="/sys/class/gpio/gpio${1}/value"
-
-    if [ ! -r $port ]
-    then
-        echo "cannot access $port"
-        return 1
-    fi
-
-    case "$(cat $port)" in
+    case "$(gpioget $GPIOCHIP $1)" in
     0)
         echo "off"
         ;;
@@ -55,7 +48,6 @@ stat_gpio ()
 #
 ctl_gpio ()
 {
-    local port="/sys/class/gpio/gpio${2}/value"
     local i
 
     for i in `seq 0 $4`
@@ -77,21 +69,16 @@ ctl_gpio ()
             return 0
         fi
 
-        if [ ! -w $port ]
-        then
-            echo "cannot access $port"
-            return 1
-        fi
-
         if [ $i -eq 0 ]
         then
-            echo 1 > $port
-            sleep $3
-            echo 0 > $port
             if [ $4 -eq 0 ]
             then
+                gpioset --background --mode=time --sec=$3 $GPIOCHIP $2=1
                 return 0
-            elif [ $1 = "reset" ]
+            else
+                gpioset --mode=time --sec=$3 $GPIOCHIP $2=1
+            fi
+            if [ $1 = "reset" ]
             then
                 return 0
             fi

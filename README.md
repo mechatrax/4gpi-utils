@@ -87,12 +87,6 @@
   コマンドの実行を _&lt;N&gt;_ 秒後にタイムアウトします。  
   デフォルトは 30 です。
 
-### /usr/lib/4gpi-utils/gpio-export.sh
-4GPi で使用する GPIO ポートを初期化する実行ファイルです。
-
-### /usr/lib/4gpi-utils/gpio-unexport.sh
-4GPi で使用する GPIO ポートを開放する実行ファイルです。
-
 ### /usr/lib/4gpi-utils/device-start.sh
 4GPi の起動処理を行う実行ファイルです。
 
