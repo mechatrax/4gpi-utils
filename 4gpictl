@@ -9,7 +9,7 @@ TIMEOUT=40
 HARD=0
 CONFIG=/etc/default/4gpi
 
-USAGE="Usage: 4gpictl [ OPTION ] COMMAND [VALUE]
+USAGE="Usage: 4gpictl [OPTION] COMMAND [VALUE]
 
 Commands:
   poweron                         power on module
