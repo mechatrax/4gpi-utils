@@ -66,17 +66,21 @@
 ### /usr/sbin/4gpictl
 4GPi の操作を行うための実行ファイルです。  
 使用可能なパラメータを次に示します。
-+ poweron
++ poweron  
   電源をオンします。  
-+ poweroff
++ poweroff  
   電源をオフします。  
-+ reset
++ reset  
   電源をリセットします。  
-+ status
++ status  
   電源状態を表示します。  
-+ version
++ store-sms {enable|disable}  
+  SMS の保存を設定します。  
++ wake-on-ring {enable|disable}  
+  Wake-on-Ring を設定します。  
++ version  
   バージョンを表示します。  
-+ help
++ help  
   ヘルプを表示します。
 
 指定可能なオプションを次に示します。
@@ -85,7 +89,12 @@
   デフォルトは /etc/default/4gpi です。
 + -t, --timeout _&lt;N&gt;_  
   コマンドの実行を _&lt;N&gt;_ 秒後にタイムアウトします。  
-  デフォルトは 30 です。
+  デフォルトは 30 です。  
++ -h, --hard  
+  ハードウェアによる poweroff または reset を行います。  
++ -s, --soft  
+  ソフトウェアによる poweroff または reset を行います。  
+  デフォルトではソフトウェアによる操作を行います。
 
 ### /usr/lib/4gpi-utils/device-start.sh
 4GPi の起動処理を行う実行ファイルです。
