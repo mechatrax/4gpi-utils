@@ -5,10 +5,14 @@ _4gpictl()
 		'poweroff'
 		'reset'
 		'status'
+		'store-sms'
+		'wake-on-ring'
 	)
 	local opts=(
-		'--timeout'
 		'--config'
+		'--hard'
+		'--soft'
+		'--timeout'
 	)
 	local exts=(
 		'version'
@@ -38,7 +42,12 @@ _4gpictl()
 		;;
 	poweron|poweroff|reset|status)
 		;;
+	store-sms|wake-on-ring)
+		COMPREPLY=( $(compgen -W 'enable disable' -- $cur) )
+		;;
 	help|version)
+		;;
+	disable|enable)
 		;;
 	*)
 		COMPREPLY=( $(compgen -W '${cmds[@]}' -- $cur) )

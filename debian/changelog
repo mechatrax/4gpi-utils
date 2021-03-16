@@ -1,3 +1,14 @@
+4gpi-utils (3.0.0) buster; urgency=medium
+
+  * 4gpictl
+    - Change poweroff and reset process from hardware to software
+    - Add SMS command
+    - Add Wake-on-Ring command
+  * bash_completion.d/4gpictl: Add new commands
+  * Update shell scripts to use new 4gpictl commands
+
+ -- Masahiro Honda <honda@mechatrax.com>  Tue, 16 Mar 2021 17:07:01 +0900
+
 4gpi-utils (2.0.0) buster; urgency=medium
 
   * Change GPIO interface from sysfs to gpiod

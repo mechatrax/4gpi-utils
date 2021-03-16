@@ -2,120 +2,250 @@
 #
 # control 4GPi module
 #
-VERSION="2.0"
+VERSION="3.0"
 
 GPIOCHIP=gpiochip0
 TIMEOUT=40
+HARD=0
 CONFIG=/etc/default/4gpi
 
-USAGE="Usage: 4gpictl [ OPTION ] COMMAND
+USAGE="Usage: 4gpictl [OPTION] COMMAND [VALUE]
 
 Commands:
-  poweron              power on module
-  poweroff             power off module
-  reset                reset module
-  status               show power status
-  version              display version and exit
-  help                 display help and exit
+  poweron                         power on module
+  poweroff                        power off module
+  reset                           reset module
+  status                          show power status
+  store-sms {enable|disable}      set SMS storing
+  wake-on-ring {enable|disable}   set Wake On Ring
+  version                         display version and exit
+  help                            display help and exit
 
 Options:
-  -t, --timeout <N>    set timeout to N sec
-  -c, --config <FILE>  read config from FILE
-  --nowait             do not wait for change of power status
+  -t, --timeout <N>               set timeout to N sec
+  -c, --config <FILE>             read config from FILE
+  -h, --hard                      poweroff or reset by hardware
+  -s, --soft                      poweroff or reset by software (DEFAULT)
+  --nowait                        do not wait for poweron, poweroff or reset
 "
 
+CHAT_PWROFF="AT+CFUN=0 OK AT+CPOF OK"
+CHAT_RESET="AT+CFUN=0 OK AT+CRESET OK"
+CHAT_RIEN="AT+CFGRI=1 OK AT+CSCLK=1 OK"
+CHAT_RIDIS="AT+CFGRI=0 OK AT+CSCLK=0 OK"
+CHAT_SM="AT+CNMI=1,2,0,0,0 OK AT+CPMS=\"SM\",\"SM\",\"SM\" OK"
+CHAT_ME="AT+CNMI=2,1,2,2,0 OK AT+CPMS=\"ME\",\"ME\",\"ME\" OK"
+
 #
-# Usage: stat_gpio [GPIO_PIN]
+# Usage: chat_modem [COMMAND]
 #
-stat_gpio ()
+chat_modem ()
 {
-    case "$(gpioget $GPIOCHIP $1)" in
-    0)
-        echo "off"
-        ;;
-    1)
-        echo "on"
-        ;;
-    *)
-        echo "unknown"
-        return 1
-        ;;
-    esac
+	chat -t $TIMEOUT ABORT BUSY ABORT ERROR '' AT OK-AT-OK $1 '' \
+		< $CONSOLE_PORT > $CONSOLE_PORT
 }
 
 #
-# Usage: ctl_gpio [CONDITION] [GPIO_PIN] [TOGGLE_INTERVAL] [TIMEOUT]
+# Usage: ctl_gpio [CONDITION] [GPIO_PIN] [TOGGLE_INTERVAL]
 #
 ctl_gpio ()
 {
-    local i
+	local ret
 
-    for i in `seq 0 $4`
-    do
-        STATUS=$(stat_gpio $STATUS_PIN)
+	gpioset --mode=time --sec=$3 $GPIOCHIP $2=1 || return $?
+	gpioset $GPIOCHIP $2=0 || return $?
 
-        if [ $? -ne 0 ]
-        then
-            echo "$STATUS"
-            return 1
-        fi
-
-        if [ $STATUS = $1 ]
-        then
-            if [ $i -eq 0 ]
-            then
-                echo "already power $1"
-            fi
-            return 0
-        fi
-
-        if [ $i -eq 0 ]
-        then
-            if [ $4 -eq 0 ]
-            then
-                gpioset --background --mode=time --sec=$3 $GPIOCHIP $2=1
-                return 0
-            else
-                gpioset --mode=time --sec=$3 $GPIOCHIP $2=1
-            fi
-            if [ $1 = "reset" ]
-            then
-                return 0
-            fi
-        fi
-        sleep 1
-    done
-
-    echo "timeout power $1"
-
-    return 1
+	return 0
 }
 
 #
-# Usage: 4gpi_power {on|off|reset|show}
+# Usage: get_gpio [GPIO_PIN]
 #
-4gpi_power ()
+get_gpio ()
 {
-    case $1 in
-    on)
-        ctl_gpio on $POWER_PIN 3 $TIMEOUT
-        ;;
-    off)
-        ctl_gpio off $POWER_PIN 3 $TIMEOUT
-        ;;
-    reset)
-        ctl_gpio reset $RESET_PIN 1 $TIMEOUT
-        ;;
-    show)
-        stat_gpio $STATUS_PIN
-        ;;
-    *)
-        echo "Usage: 4gpictl $POWER_USAGE"
-        exit 1
-        ;;
-    esac
+	case "$(gpioget $GPIOCHIP $1)" in
+	0)
+		echo "off"
+		;;
+	1)
+		echo "on"
+		;;
+	*)
+		echo "unknown"
+		return 1
+		;;
+	esac
 }
 
+#
+# Usage: chk_stat [CONDITION]
+#
+chk_stat ()
+{
+	local stat
+
+	stat=$(get_gpio $STATUS_PIN)
+
+	if [ $? -ne 0 ]
+	then
+		echo "$stat"
+		return 2
+	fi
+
+	if [ $stat = $1 ]
+	then
+		echo "already power $1"
+		return 0
+	fi
+
+	return 1
+}
+
+#
+# Usage: wait_stat [CONDITION] [TIMEOUT]
+#
+wait_stat ()
+{
+	local i
+	local stat
+
+	if [ $2 -eq 0 ]
+	then
+		return 0
+	fi
+
+	for i in `seq $2`
+	do
+		stat=$(get_gpio $STATUS_PIN)
+		if [ $? -ne 0 ]
+		then
+			echo "$stat"
+			return 2
+		fi
+		if [ $stat = $1 ]
+		then
+			return 0
+		fi
+		sleep 1
+	done
+
+	echo "timeout power $1"
+
+	return 2
+}
+
+#
+# Usage: cfg_ring {enable|disable}
+#
+cfg_ring ()
+{
+	local ret
+
+	case "$1" in
+		enable|1)
+			chat_modem "$CHAT_RIEN"
+			ret=$?
+			;;
+		disable|0)
+			chat_modem "$CHAT_RIDIS"
+			ret=$?
+			;;
+		*)
+			return 1
+			;;
+	esac
+
+	return $ret
+}
+
+#
+# Usage: cfg_store {enable|disable}
+#
+cfg_store ()
+{
+	local ret
+
+	case "$1" in
+		enable|1)
+			chat_modem "$CHAT_ME"
+			ret=$?
+			;;
+		disable|0)
+			chat_modem "$CHAT_SM"
+			ret=$?
+			;;
+		*)
+			return 1
+			;;
+	esac
+
+	return $ret
+}
+
+#
+# Usage: 4gpi_poweron
+#
+4gpi_poweron ()
+{
+	local ret
+
+	chk_stat on
+	ret=$?
+	if [ $ret -ne 1 ]
+	then
+		return $ret
+	fi
+
+	ctl_gpio on $POWER_PIN 3 && wait_stat on $TIMEOUT
+}
+
+#
+# Usage: 4gpi_poweroff
+#
+4gpi_poweroff ()
+{
+	local ret
+
+	chk_stat off
+	ret=$?
+	if [ $ret -ne 1 ]
+	then
+		return $ret
+	fi
+
+	if [ $HARD -ne 0 ]
+	then
+		ctl_gpio off $POWER_PIN 3 && wait_stat off $TIMEOUT
+	else
+		chat_modem "$CHAT_PWROFF" && wait_stat off $TIMEOUT
+	fi
+}
+
+#
+# Usage: 4gpi_reset
+#
+4gpi_reset ()
+{
+	local ret
+
+	chk_stat off
+	ret=$?
+	if [ $ret -ne 1 ]
+	then
+		return 2
+	fi
+		
+	if [ $HARD -ne 0 ]
+	then
+		ctl_gpio reset $RESET_PIN 1 \
+			&& wait_stat off $TIMEOUT \
+			&& wait_stat on $TIMEOUT
+	else
+		chat_modem "$CHAT_RESET" \
+			&& wait_stat off $TIMEOUT \
+			&& wait_stat on $TIMEOUT
+	fi
+}
 
 ARGS=($@)
 #
@@ -123,24 +253,32 @@ ARGS=($@)
 #
 for i in $(seq 0 $((${#ARGS[@]} - 1)))
 do
-    case ${ARGS[$i]} in
-    -t|--timeout)
-        TIMEOUT=${ARGS[$(($i + 1))]}
-        unset ARGS[$i]
-        unset ARGS[$(($i + 1))]
-        ;;
-    -c|--config)
-        CONFIG=${ARGS[$(($i + 1))]}
-        unset ARGS[$i]
-        unset ARGS[$(($i + 1))]
-        ;;
-    --nowait)
-        TIMEOUT=0
-        unset ARGS[$i]
-        ;;
-    *)
-        ;;
-    esac
+	case ${ARGS[$i]} in
+		-t|--timeout)
+			TIMEOUT=${ARGS[$(($i + 1))]}
+			unset ARGS[$i]
+			unset ARGS[$(($i + 1))]
+			;;
+		-c|--config)
+			CONFIG=${ARGS[$(($i + 1))]}
+			unset ARGS[$i]
+			unset ARGS[$(($i + 1))]
+			;;
+		-h|--hard)
+			HARD=1
+			unset ARGS[$i]
+			;;
+		-s|--soft)
+			HARD=0
+			unset ARGS[$i]
+			;;
+		--nowait)
+			TIMEOUT=0
+			unset ARGS[$i]
+			;;
+		*)
+			;;
+	esac
 done
 
 [ -r $CONFIG ] && . $CONFIG
@@ -150,33 +288,39 @@ ARGS=(${ARGS[@]})
 # execute command
 #
 case ${ARGS[0]} in
-poweron|--poweron)
-    ctl_gpio on $POWER_PIN 3 $TIMEOUT
-    ;;
-poweroff|--poweroff)
-    ctl_gpio off $POWER_PIN 3 $TIMEOUT
-    ;;
-reset|--reset)
-    ctl_gpio reset $RESET_PIN 1 $TIMEOUT
-    ;;
-status|--status)
-    stat_gpio $STATUS_PIN
-    ;;
-version|--version|-v)
-    echo "4gpictl version $VERSION"
-    ;;
-help|--help|-h)
-    echo "$USAGE"
-    ;;
-*)
-    echo "$USAGE"
-    exit 1
-    ;;
+	poweron|--poweron)
+		4gpi_poweron
+		;;
+	poweroff|--poweroff)
+		4gpi_poweroff
+		;;
+	reset|--reset)
+		4gpi_reset
+		;;
+	status|--status)
+		get_gpio $STATUS_PIN
+		;;
+	wake-on-ring)
+		cfg_ring "${ARGS[1]}"
+		;;
+	store-sms)
+		cfg_store "${ARGS[1]}"
+		;;
+	version|--version|-v)
+		echo "4gpictl version $VERSION"
+		;;
+	help|--help|-h)
+		echo "$USAGE"
+		;;
+	*)
+		echo "$USAGE"
+		exit 1
+		;;
 esac
 
 if [ $? -ne 0 ]
 then
-    echo "error: command failure"
-    exit 2
+	echo "error: command failure"
+	exit 2
 fi
 
