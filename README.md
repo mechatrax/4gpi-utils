@@ -89,7 +89,7 @@
   デフォルトは /etc/default/4gpi です。
 + -t, --timeout _&lt;N&gt;_  
   コマンドの実行を _&lt;N&gt;_ 秒後にタイムアウトします。  
-  デフォルトは 30 です。  
+  デフォルトは 40 です。  
 + -h, --hard  
   ハードウェアによる poweroff または reset を行います。  
 + -s, --soft  
