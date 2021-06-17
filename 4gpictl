@@ -29,8 +29,8 @@ Options:
   --nowait                        do not wait for poweron, poweroff or reset
 "
 
-CHAT_PWROFF="AT+CFUN=0 OK AT+CPOF OK"
-CHAT_RESET="AT+CFUN=0 OK AT+CRESET OK"
+CHAT_PWROFF="AT+CFUN=0\;+CPOF OK"
+CHAT_RESET="AT+CFUN=0\;+CRESET OK"
 CHAT_RIEN="AT+CFGRI=1 OK AT+CSCLK=1 OK"
 CHAT_RIDIS="AT+CFGRI=0 OK AT+CSCLK=0 OK"
 CHAT_SM="AT+CNMI=1,2,0,0,0 OK AT+CPMS=\"SM\",\"SM\",\"SM\" OK"
