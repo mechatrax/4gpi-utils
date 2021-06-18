@@ -2,7 +2,7 @@
 #
 # control 4GPi module
 #
-VERSION="3.0"
+VERSION="3.1"
 
 GPIOCHIP=gpiochip0
 TIMEOUT=40
