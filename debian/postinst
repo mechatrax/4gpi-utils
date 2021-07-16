@@ -18,9 +18,8 @@ fi
 
 if [ -d /run/systemd/system ]; then
 	systemctl --system daemon-reload >/dev/null || true
+	udevadm control --reload-rules || true
 	deb-systemd-invoke start 4gpi-setup.service >/dev/null || true
-	udevadm trigger --subsystem-match=tty --action=change || true
-	udevadm trigger --subsystem-match=usbmisc --action=change || true
 fi
 
 if deb-systemd-helper --quiet debian-installed ModemManager.service \

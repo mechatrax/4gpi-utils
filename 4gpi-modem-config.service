@@ -1,7 +1,7 @@
 [Unit]
 Description=Configure the modem on 4GPi
 DefaultDependencies=no
-Requires=dev-tty4GPI.device
+BindsTo=dev-tty4GPI.device
 After=4gpi-setup.service dev-tty4GPI.device
 
 [Service]

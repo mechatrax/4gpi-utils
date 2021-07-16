@@ -1,12 +1,12 @@
 Source: 4gpi-utils
 Section: net
 Priority: optional
-Maintainer: Masahiro Honda <honda@mechatrax.com>
-Build-Depends: debhelper (>= 12), bash-completion
-Standards-Version: 4.3.0
+Maintainer: Yuta Kiyonaga <kiyonaga@mechatrax.com>
+Build-Depends: debhelper-compat (= 12), bash-completion
+Standards-Version: 4.5.1
 Vcs-Git: https://github.com/mechatrax/4gpi-utils.git
 Vcs-browser: https://github.com/mechatrax/4gpi-utils
-Homepage: https://www.mechatrax.com/
+Homepage: https://mechatrax.com/
 
 Package: 4gpi-utils
 Architecture: all
