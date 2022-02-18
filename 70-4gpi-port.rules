@@ -4,6 +4,7 @@ ACTION!="add|change|move", GOTO="4gpi_port_end"
 SUBSYSTEM!="tty|usbmisc", GOTO="4gpi_port_end"
 
 SUBSYSTEMS=="usb", KERNEL=="ttyUSB*", ATTRS{idVendor}=="1e0e", ATTRS{idProduct}=="9001", GOTO="4gpi_port_go"
+
 # WDM port
 SUBSYSTEMS=="usb", KERNEL=="cdc-wdm*", ATTRS{idVendor}=="1e0e", ATTRS{idProduct}=="9001", SYMLINK+="cdc-wdm"
 GOTO="4gpi_port_end"
@@ -11,10 +12,10 @@ GOTO="4gpi_port_end"
 LABEL="4gpi_port_go"
 
 # DIAG port
-ENV{ID_USB_INTERFACE_NUM}=="00"
+#ENV{ID_USB_INTERFACE_NUM}=="00"
 
 # NMEA port
-ENV{ID_USB_INTERFACE_NUM}=="01"
+#ENV{ID_USB_INTERFACE_NUM}=="01"
 
 # AT command port
 ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="tty4GPI", TAG+="systemd", ENV{SYSTEMD_WANTS}+="4gpi-modem-config.service"
@@ -23,7 +24,7 @@ ENV{ID_USB_INTERFACE_NUM}=="02", SYMLINK+="tty4GPI", TAG+="systemd", ENV{SYSTEMD
 ENV{ID_USB_INTERFACE_NUM}=="03", SYMLINK+="modem"
 
 # Audio port
-ENV{ID_USB_INTERFACE_NUM}=="04"
+#ENV{ID_USB_INTERFACE_NUM}=="04"
 
 LABEL="4gpi_port_end"
 
