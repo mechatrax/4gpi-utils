@@ -1,3 +1,9 @@
+4gpi-utils (3.1.2) bullseye; urgency=medium
+
+  * 70-4gpi-port.rules: Fix udev rules
+
+ -- Yuta Kiyonaga <kiyonaga@mechatrax.com>  Mon, 21 Feb 2022 14:40:05 +0900
+
 4gpi-utils (3.1.1) bullseye; urgency=medium
 
   * Debian/compat: Deleted
