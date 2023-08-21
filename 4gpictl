@@ -2,7 +2,7 @@
 #
 # control 4GPi module
 #
-VERSION="3.1"
+VERSION="3.2"
 
 GPIOCHIP=gpiochip0
 TIMEOUT=40
@@ -88,13 +88,11 @@ chk_stat ()
 
 	if [ $? -ne 0 ]
 	then
-		echo "$stat"
 		return 2
 	fi
 
 	if [ $stat = $1 ]
 	then
-		echo "already power $1"
 		return 0
 	fi
 
@@ -119,7 +117,6 @@ wait_stat ()
 		stat=$(get_gpio $STATUS_PIN)
 		if [ $? -ne 0 ]
 		then
-			echo "$stat"
 			return 2
 		fi
 		if [ $stat = $1 ]
@@ -129,7 +126,7 @@ wait_stat ()
 		sleep 1
 	done
 
-	echo "timeout power $1"
+	echo "timeout power $1" >&2
 
 	return 2
 }
@@ -320,7 +317,7 @@ esac
 
 if [ $? -ne 0 ]
 then
-	echo "error: command failure"
+	echo "error: command failure" >&2
 	exit 2
 fi
 
