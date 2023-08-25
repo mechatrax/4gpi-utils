@@ -1,3 +1,12 @@
+4gpi-utils (3.2.0) bullseye; urgency=medium
+
+  * debian/control: Add Uploaders
+  * 4gpictl
+    - Fix to redirect error messages to stderr
+    - Remove extra output messages
+
+ -- Masahiro Honda <honda@mechatrax.com>  Mon, 21 Aug 2023 18:27:06 +0900
+
 4gpi-utils (3.1.2) bullseye; urgency=medium
 
   * 70-4gpi-port.rules: Fix udev rules
