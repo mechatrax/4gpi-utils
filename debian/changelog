@@ -1,3 +1,9 @@
+4gpi-utils (3.2.1) bookworm; urgency=medium
+
+  * 4gpictl: Update gpiochip selection for Raspberry Pi 5
+
+ -- Yuta Kiyonaga <kiyonaga@mechatrax.com>  Fri, 15 Mar 2024 09:39:54 +0900
+
 4gpi-utils (3.2.0.2) bookworm; urgency=medium
 
   * debian/copyright: Update contact information
