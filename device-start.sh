@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gpioset gpiochip0 $POWER_PIN=0 $RESET_PIN=0
+gpioset -t0 -c gpiochip0 $POWER_PIN=0 $RESET_PIN=0
 
 if [ "$AUTO_ON" != "0" ]
 then
