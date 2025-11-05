@@ -2,7 +2,7 @@
 ./device-start.sh /usr/lib/4gpi-utils/
 ./device-stop.sh /usr/lib/4gpi-utils/
 ./modem-config.sh /usr/lib/4gpi-utils/
-./4gpi-modem-config.service /lib/systemd/system/
-./4gpi-setup.service /lib/systemd/system/
-./70-4gpi-port.rules /lib/udev/rules.d/
+./4gpi-modem-config.service /usr/lib/systemd/system/
+./4gpi-setup.service /usr/lib/systemd/system/
+./70-4gpi-port.rules /usr/lib/udev/rules.d/
 ./4gpi /etc/default/

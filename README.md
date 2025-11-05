@@ -105,13 +105,13 @@
 ### /usr/lib/4gpi-utils/modem-config.sh
 4GPi のモデムの設定を行う実行ファイルです。
 
-### /lib/udev/rules.d/70-4gpi-port.rules
+### /usr/lib/udev/rules.d/70-4gpi-port.rules
 4GPi のデバイスを定義した設定ファイルです。
 
-### /lib/systemd/system/4gpi-modem-config.service
+### /usr/lib/systemd/system/4gpi-modem-config.service
 4GPi のモデムの設定を行うサービスの設定ファイルです。
 
-### /lib/systemd/system/4gpi-setup.service
+### /usr/lib/systemd/system/4gpi-setup.service
 4GPi の起動終了処理を行うサービスの設定ファイルです。
 
 ### /usr/share/bash-completion/completions/4gpictl

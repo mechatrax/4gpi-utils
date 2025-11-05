@@ -52,8 +52,8 @@ ctl_gpio ()
 {
 	local ret
 
-	gpioset --mode=time --sec=$3 $GPIOCHIP $2=1 || return $?
-	gpioset $GPIOCHIP $2=0 || return $?
+    gpioset -p${3}s -t0 -c $GPIOCHIP $2=1 || return $?
+    gpioset -t0 -c $GPIOCHIP $2=0 || return $?
 
 	return 0
 }
@@ -63,7 +63,7 @@ ctl_gpio ()
 #
 get_gpio ()
 {
-	case "$(gpioget $GPIOCHIP $1)" in
+	case "$(gpioget --numeric -c $GPIOCHIP $1)" in
 	0)
 		echo "off"
 		;;
